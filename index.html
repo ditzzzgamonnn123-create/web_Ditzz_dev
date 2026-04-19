@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Xeta Axata</title>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        :root {
+            --ios-blue: #0A84FF;
+            --ios-dark-bg: rgba(20, 20, 22, 0.85);
+            --border-light: rgba(255, 255, 255, 0.12);
+            --vibrant-gradient: linear-gradient(135deg, #0A84FF 0%, #5E5CE6 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #000;
+            background-image: radial-gradient(circle at 50% 10%, #1a1a1a 0%, #000 70%);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+            color: #ffffff;
+            overflow-x: hidden;
+            letter-spacing: -0.015em;
+        }
+
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #loading-screen.visible {
+            display: flex;
+            opacity: 1;
+        }
+
+        .loader-ring {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .loader-ring div {
+            box-sizing: border-box;
+            display: block;
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            margin: 8px;
+            border: 5px solid #fff;
+            border-radius: 50%;
+            animation: ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            border-color: #fff transparent transparent transparent;
+        }
+
+        .loader-ring div:nth-child(1) { animation-delay: -0.45s; }
+        .loader-ring div:nth-child(2) { animation-delay: -0.3s; }
+        .loader-ring div:nth-child(3) { animation-delay: -0.15s; }
+
+        @keyframes ring {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .main-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            gap: 24px;
+        }
+
+        .glass-card {
+            background: var(--ios-dark-bg);
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
+            border: 1px solid var(--border-light);
+            border-radius: 36px;
+            padding: 30px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: cardEntrance 0.7s ease-out forwards;
+        }
+
+        .glass-card:nth-child(1) { animation-delay: 0.1s; }
+        .glass-card:nth-child(2) { animation-delay: 0.3s; }
+
+        @keyframes cardEntrance {
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .brand-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--ios-blue);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .dev-info {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(180deg, #fff 0%, #aaa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .vs-capsule {
+            font-size: 11px;
+            color: #000;
+            background: #fff;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            -webkit-text-fill-color: initial;
+        }
+
+        .btn-ios {
+            position: relative;
+            width: 100%;
+            padding: 20px;
+            font-size: 17px;
+            font-weight: 700;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.15, 0.95, 0.4, 1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            overflow: hidden;
+        }
+
+        .btn-filled {
+            background: var(--vibrant-gradient);
+            color: white;
+            border: none;
+            box-shadow: 0 8px 25px rgba(10, 132, 255, 0.3);
+        }
+
+        .btn-filled::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(30deg);
+            transition: none;
+        }
+
+        .btn-filled:hover::after {
+            left: 110%;
+            transition: 0.7s ease-in-out;
+        }
+
+        .btn-filled:active {
+            transform: scale(0.95);
+            box-shadow: 0 4px 10px rgba(10, 132, 255, 0.2);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255,255,255,0.05);
+            color: white;
+            padding: 14px;
+            font-size: 15px;
+        }
+
+        .btn-secondary:active {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(0.97);
+        }
+
+        .stream-icon {
+            font-size: 1.2em;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+        }
+
+        .interactive-photo-frame {
+            position: relative;
+            width: 100%;
+            padding: 10px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 28px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.05);
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .photo-wrapper {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease;
+        }
+
+        #animated-photo {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+            filter: brightness(0.9) contrast(1.1);
+            transition: filter 0.3s ease;
+        }
+
+        .frame-shine {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 100%);
+            z-index: 2;
+            pointer-events: none;
+            transition: 0.1s ease;
+        }
+
+        .photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(0deg, rgba(10, 132, 255, 0.15) 0%, rgba(0,0,0,0) 100%);
+            z-index: 1;
+        }
+
+        .qris-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 700;
+            z-index: 3;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .overlay-ios {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay-ios.visible {
+            opacity: 1;
+        }
+
+        .alert-ios {
+            background: rgba(30, 30, 31, 0.9);
+            width: 280px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            transform: scale(1.1);
+            transition: transform 0.3s cubic-bezier(0.2, 1, 0.2, 1);
+        }
+
+        .overlay-ios.visible .alert-ios {
+            transform: scale(1);
+        }
+
+        .alert-header { padding: 25px 20px 15px; text-align: center; }
+        .alert-title { font-weight: 700; font-size: 18px; margin-bottom: 6px; }
+        .alert-message { font-size: 14px; line-height: 1.4; color: rgba(255,255,255,0.9); }
+
+        .alert-buttons { display: flex; border-top: 1px solid rgba(255,255,255,0.12); }
+        .alert-btn {
+            flex: 1;
+            padding: 16px;
+            background: transparent;
+            border: none;
+            color: var(--ios-blue);
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .alert-btn:active { background: rgba(255,255,255,0.05); }
+
+        .music-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background: var(--ios-dark-bg);
+            border: 1px solid var(--border-light);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.2s ease;
+        }
+
+        .music-btn:active { transform: scale(0.9); }
+
+        .bar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            width: 24px;
+            height: 24px;
+        }
+
+        .bar {
+            width: 4px;
+            background: white;
+            border-radius: 2px;
+            height: 100%;
+            animation: none;
+        }
+
+        .playing .bar { animation: soundWaves 1.2s infinite ease-in-out; }
+        .playing .bar:nth-child(1) { animation-delay: -1.0s; height: 60%; }
+        .playing .bar:nth-child(2) { animation-delay: -0.7s; height: 100%; }
+        .playing .bar:nth-child(3) { animation-delay: -0.9s; height: 80%; }
+        .playing .bar:nth-child(4) { animation-delay: -0.6s; height: 50%; }
+
+        @keyframes soundWaves {
+            0%, 100% { height: 10px; }
+            50% { height: 24px; }
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="loading-screen">
+    <div class="loader-ring"><div></div><div></div><div></div><div></div></div>
+    <p style="color: white; margin-top: 20px; font-weight: 600; font-size: 14px; letter-spacing: 1px;">PREPARING PREMIUM EXPERIENCE...</p>
+</div>
+
+<div id="particles-js"></div>
+
+<div class="main-content">
+    <div class="glass-card">
+        <span class="brand-label">Developer</span>
+        <div class="dev-info">
+            <span>Ditzz</span>
+            <span class="vs-capsule">X</span>
+            <span>Axata</span>
+        </div>
+        <button class="btn-ios btn-secondary" onclick="showAlert('Sesi silaturahmi sedang offline. Pinjam dulu 100.')">📜 VIEW RULES</button>
+    </div>
+
+    <div class="glass-card">
+        <span class="brand-label">Xeta Axata</span>
+        
+        <div class="interactive-photo-frame" id="photo-frame">
+            <span class="qris-badge">Click Me</span>
+            <div class="photo-overlay"></div>
+            <div class="frame-shine" id="frame-shine"></div>
+            <div class="photo-wrapper" id="photo-wrapper">
+                <img src="https://files.catbox.moe/d2v4v4.jpg" alt="Xeta Axata" id="animated-photo">
+            </div>
+        </div>
+        
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+            <a href="https://web-nekopoi.vercel.app/" class="btn-ios btn-filled" onclick="handleFeature('Nekopoi')"><span class="stream-icon">🎬</span> NEKOPOI </a>
+            <a href="https://sfl.gl/FaOpG" class="btn-ios btn-filled" onclick="handleFeature('Otakudesu Server 1')"><span class="stream-icon">🎥</span> Xeta Stream</a>
+            <a href="https://ff-kipas-web.vercel.app/" class="btn-ios btn-filled" onclick="handleFeature('Otakudesu Server 2')"><span class="stream-icon">🖥️</span> FF KIPAS</a>
+             <a href="https://web-ff-beta-gamma.vercel.app/" class="btn-ios btn-filled" onclick="handleFeature('Otakudesu Server 2')"><span class="stream-icon">🖥️</span> FF BETA</a>
+             <a href="https://wa.me/6283164818824" class="btn-ios btn-filled" onclick="handleFeature('contact dev')"><span class="stream-icon">☎️</span> Contact Dev</a>
+        </div>
+    </div>
+</div>
+
+<div class="overlay-ios" id="overlay">
+    <div class="alert-ios">
+        <div class="alert-header">
+            <div class="alert-title">Notification</div>
+            <div class="alert-message" id="alert-message">Bagi THR nya dulu Bro... 🧧🧧🧧</div>
+        </div>
+        <div class="alert-buttons">
+            <button class="alert-btn" onclick="closeAlert()">Cancel</button>
+            <button class="alert-btn" style="border-left: 1px solid rgba(255,255,255,0.12);" onclick="confirmFeature()">Okay</button>
+        </div>
+    </div>
+</div>
+
+<audio id="bg-music" loop>
+    <source src="https://files.catbox.moe/kg9n30.m4a" type="audio/mpeg">
+</audio>
+
+<button class="music-btn" id="music-control" onclick="toggleMusic()">
+    <div class="bar-container">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+</button>
+
+<script>
+    let featureToLoad = '';
+
+    const frame = document.getElementById('photo-frame');
+    const wrapper = document.getElementById('photo-wrapper');
+    const photo = document.getElementById('animated-photo');
+    const shine = document.getElementById('frame-shine');
+
+    frame.addEventListener('mousemove', (e) => {
+        const rect = frame.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = (y - centerY) / 10;
+        const rotateY = (centerX - x) / 10;
+        
+        wrapper.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        
+        photo.style.filter = `brightness(1.1) contrast(1.1) saturate(1.1)`;
+
+        const shineX = (x / rect.width) * 100;
+        const shineY = (y / rect.height) * 100;
+        shine.style.background = `radial-gradient(circle at ${shineX}% ${shineY}%, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 60%)`;
+        shine.style.opacity = '1';
+    });
+
+    frame.addEventListener('mouseleave', () => {
+        wrapper.style.transform = 'rotateX(0deg) rotateY(0deg)';
+        photo.style.filter = `brightness(0.9) contrast(1.1) saturate(1)`;
+        shine.style.opacity = '0';
+    });
+
+    function handleFeature(serverName) {
+        featureToLoad = serverName;
+        showAlert('ingin masuk ke platfrom ' + serverName + '... Bagi THR dulu Bro... 🧧');
+    }
+
+    function showAlert(message) {
+        document.getElementById('alert-message').innerText = message;
+        const overlay = document.getElementById('overlay');
+        overlay.style.display = 'flex';
+        setTimeout(() => overlay.classList.add('visible'), 10);
+    }
+
+    function closeAlert() {
+        const overlay = document.getElementById('overlay');
+        overlay.classList.remove('visible');
+        setTimeout(() => overlay.style.display = 'none', 300);
+        featureToLoad = '';
+    }
+
+    function confirmFeature() {
+        if (!featureToLoad) return closeAlert();
+        
+        const serverName = featureToLoad;
+        closeAlert();
+        
+        setTimeout(() => {
+            const loader = document.getElementById('loading-screen');
+            loader.classList.add('visible');
+            
+            setTimeout(() => {
+                let targetUrl = 'https://web-nekopoi.vercel.app/';
+                if(serverName.includes('Otakudesu')) targetUrl = 'https://otakudesu.blog/';
+                
+                window.location.href = targetUrl;
+            }, 4000);
+        }, 350);
+    }
+
+    particlesJS("particles-js", {
+        "particles": {
+            "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+            "color": { "value": "#0A84FF" },
+            "opacity": { "value": 0.4 },
+            "size": { "value": 3, "random": true },
+            "line_linked": { "enable": true, "distance": 120, "color": "#0A84FF", "opacity": 0.15, "width": 1 },
+            "move": { "enable": true, "speed": 1.5, "direction": "none", "random": true, "out_mode": "out" }
+        },
+        "retina_detect": true
+    });
+
+    const music = document.getElementById('bg-music');
+    const musicBtn = document.getElementById('music-control');
+
+    function toggleMusic() {
+        if (music.paused) {
+            music.play();
+            musicBtn.classList.add('playing');
+        } else {
+            music.pause();
+            musicBtn.classList.remove('playing');
+        }
+    }
+</script>
+</body>
+</html>
